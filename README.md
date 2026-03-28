@@ -5,7 +5,7 @@
 
 ## 快速开始
 
-直接从仓库拉取
+直接从仓库拉取代码
 ```hash
 docker pull risingwater/wechat-linux:latest
 ```
