@@ -11,20 +11,20 @@ dbus-daemon --system --fork --print-address &
 sleep 1
 
 # 启动虚拟屏幕 (Xvfb)
-Xvfb $DISPLAY -screen 0 $RESOLUTION -ac +extension GLX +render -noreset > /var/log/xvfb.log 2>&1 &
+Xvfb $DISPLAY -screen 0 $RESOLUTION -ac +extension GLX +render -noreset 2>&1 &
 XVFB_PID=$!
 
 # 启动轻量级窗口管理器
-fluxbox > /var/log/fluxbox.log 2>&1 &
+fluxbox 2>&1 &
 
 # 启动 VNC 服务 (5900端口，设置密码为 wechat)
-x11vnc -display $DISPLAY -forever -shared -passwd wechat -listen 0.0.0.0 > /var/log/x11vnc.log 2>&1 &
+x11vnc -display $DISPLAY -forever -shared -passwd wechat -listen 0.0.0.0 2>&1 &
 X11VNC_PID=$!
 
 echo "服务已启动，VNC 端口: 5900 (密码: wechat)"
 
-# 以 wechat 用户身份启动微信
-su - wechat -c "export DISPLAY=$DISPLAY; wechat > /var/log/wechat/wechat.log 2>&1" &
+# 以 wechat 用户身份启动微信，将日志输出到控制台
+su - wechat -c "export DISPLAY=$DISPLAY; wechat 2>&1" &
 WECHAT_PID=$!
 
 # 守护进程：如果关键服务退出，则重启或保持运行
@@ -34,7 +34,7 @@ while true; do
         XVFB_PID=$!
     fi
     if ! ps -p $WECHAT_PID > /dev/null; then
-        su - wechat -c "export DISPLAY=$DISPLAY; wechat > /var/log/wechat/wechat.log 2>&1" &
+        su - wechat -c "export DISPLAY=$DISPLAY; wechat 2>&1" &
         WECHAT_PID=$!
     fi
     sleep 10

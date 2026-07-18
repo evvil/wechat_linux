@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     x11vnc \
     fluxbox \
+    dbus \
     dbus-x11 \
     xorg \
     fonts-noto-cjk \
@@ -26,6 +27,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxcb-image0 \
     libxcb-render-util0 \
     libxcb-keysyms1 \
+    libpulse0 \
+    libnss3 \
+    libatk1.0-0t64 \
+    libatk-bridge2.0-0t64 \
+    libasound2t64 \
     locales \
     tzdata && \
     # 生成中文语言包
@@ -47,6 +53,10 @@ RUN chmod +x /usr/local/bin/install-wechat.sh /usr/local/bin/start.sh && \
     rm /usr/local/bin/install-wechat.sh
 
 WORKDIR /home/wechat
+
+# 声明数据卷（方便用户挂载持久化数据）
+VOLUME ["/home/wechat/.xwechat", "/home/wechat/xwechat_files", "/home/wechat/downloads"]
+
 EXPOSE 5900
 CMD ["/usr/local/bin/start.sh"]
 #CMD ["/bin/bash"]
