@@ -28,14 +28,14 @@ su - wechat -c "export DISPLAY=$DISPLAY; wechat 2>&1" &
 WECHAT_PID=$!
 
 # 守护进程：如果关键服务退出，则重启或保持运行
-while true; do
-    if ! ps -p $XVFB_PID > /dev/null; then
-        Xvfb $DISPLAY -screen 0 $RESOLUTION -ac +extension GLX +render -noreset > /dev/null 2>&1 &
-        XVFB_PID=$!
-    fi
-    if ! ps -p $WECHAT_PID > /dev/null; then
-        su - wechat -c "export DISPLAY=$DISPLAY; wechat 2>&1" &
-        WECHAT_PID=$!
-    fi
-    sleep 10
-done
+# while true; do
+#     if ! ps -p $XVFB_PID > /dev/null; then
+#         Xvfb $DISPLAY -screen 0 $RESOLUTION -ac +extension GLX +render -noreset > /dev/null 2>&1 &
+#         XVFB_PID=$!
+#     fi
+#     if ! ps -p $WECHAT_PID > /dev/null; then
+#         su - wechat -c "export DISPLAY=$DISPLAY; wechat 2>&1" &
+#         WECHAT_PID=$!
+#     fi
+#     sleep 300
+# done
