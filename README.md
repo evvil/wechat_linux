@@ -28,14 +28,14 @@
 
 ### 方式二：直接拉取并运行镜像
 ```bash
-docker pull risingwater/wechat-linux:latest
+docker pull ghcr.io/evvil/wechat_linux:latest
 
 docker run -d --name wechat \
   -p 5900:5900 \
   -v $HOME/wechat_config:/home/wechat/.xwechat \
   -v $HOME/wechat_files:/home/wechat/xwechat_files \
   -v $HOME/wechat_downloads:/home/wechat/downloads \
-  risingwater/wechat-linux:latest
+  ghcr.io/evvil/wechat_linux:latest
 ```
 
 ## 常用环境变量（在 docker-compose 或 docker run 时设置）
@@ -83,7 +83,7 @@ docker run -d --name wechat -p 5900:5900 \
   - 权限问题：确保宿主机挂载目录的 UID/GID 与容器内运行用户兼容
 
 ## 升级镜像与数据备份
-- 升级镜像：docker pull risingwater/wechat-linux:latest，然后重启容器（先备份数据卷）
+- 升级镜像：docker pull ghcr.io/evvil/wechat_linux:latest，然后重启容器（先备份数据卷）
 - 备份：直接拷贝宿主机映射的目录或使用 docker cp 从容器拷贝配置文件
 
 ## 安全建议
@@ -127,4 +127,4 @@ docker run -d --name wechat -p 5900:5900 \
   1) 在新分支添加完整的 noVNC compose 示例并做基本测试；
   2) 添加一个基于 GitHub Actions 的简单构建+lint 流程以自动化验证镜像能否构建并运行基本启动脚本。
 
-我已将上述摘要替换到 README 的“与原作者的对比（补充说明）”部分。如需我把这些变更单独放到一个 commit 或分支（而非直接修改 main README），我可以创建一个分支并提交变更.
+我已将上述摘要替换到 README 的“与原作者的对比（补充说明）”部分。如需我把这些变更单独放到一个 commit 或分支（而非直接修改 main README），我可以创建一个分支并提交变更.",
