@@ -53,12 +53,10 @@ docker run -d --name wechat \
 
 保证这些目录的权限正确（容器内运行用户有读取写入权限）。
 
-## noVNC（通过浏览器访问）
-项目可集成 noVNC 或者你可以自行部署一个 noVNC 服务并将其连接到容器的 VNC 端口。例如：
-1. 启动 noVNC 容器，连接目标 VNC 地址 localhost:5900。
-2. 在浏览器访问 noVNC 提供的 Web UI（通常是 http://<host>:6080）。
+## noVNC（已从仓库移除）
+注意：仓库中已故意移除了 noVNC 的实际配置与文件。README 中保留的 noVNC 相关说明仅作为集成参考，并不表示仓库包含 noVNC 的实现。
 
-注意：若通过公网访问，请务必使用 HTTPS、认证或反向代理限制访问。
+如果你需要将 noVNC 真正集成到项目中，我可以在新分支中添加一个可运行的 noVNC docker-compose 示例（包括如何通过 websockify/novnc 连接到 wechat 容器的 VNC 端口）并发起 PR。
 
 ## 本地构建
 ```bash
@@ -104,3 +102,31 @@ docker run -d --name wechat -p 5900:5900 \
 
 ## 致谢
 基于社区原始方案构建并整理，感谢所有贡献者与原作者。
+
+---
+
+## 与原作者的对比（补充说明）
+
+说明：下面是我对本仓库 README 的改动摘要以及对原始作者（upstream）工作记录的简要说明，方便读者了解历史与差异。
+
+- 我所做的 README 改动（2026-07-18, 提交者：Evvil）
+  - 将 README 重构为更清晰的章节（特性、快速开始、环境变量、数据卷、noVNC、故障排查、备份、安全建议、贡献等）。
+  - 在文档中注明仓库已移除 noVNC 的实际配置/文件（这是故意的删除），并把 noVNC 相关说明保留为集成参考。
+
+- 上游/原作者与历史提交要点（摘选）
+  - 初始化提交（init version）: b8fb433 — 作者显示为 王旭（wangxu），建立项目基础结构。
+  - RisingWater 的维护提交（多次）: 包括更新 README、添加许可证、调整 Docker 工作流等（例如 4c7b45e、dc1ac64、4b7bbc5 等）。RisingWater 看起来是早期主要维护者/贡献者之一。
+  - 我在此仓库的提交（Evvil）: 0c8b53e 等，用于扩展 README 内容并调整示例与说明。
+
+- 关于 noVNC：
+  - README 之前提及 noVNC，但仓库中并未包含 noVNC 的实际文件或配置（例如 noVNC 子模块、websockify、相关 Dockerfile 或 docker-compose 服务定义）。因此当前文档明确标注 noVNC 已被移除；若需要，我可以在新分支中添加实际集成示例。
+
+- 建议
+  - 若想把 noVNC 当作可直接运行的功能，建议添加一个 docker-compose 服务示例：
+    - 使用 consol/novnc 或 novnc/noVNC 的镜像（或官方镜像），把 VNC_HOST/VNC_PORT 指向 wechat 容器的 5900 端口；并添加必要的安全配置（认证、HTTPS）示例。
+  - 如需我代为实现，我会：
+    1. 新建分支（例如 feat/novnc-compose），添加 docker-compose.yml 的 noVNC 服务示例和运行说明；
+    2. 运行简单测试（本地或通过说明步骤）；
+    3. 提交并打开 PR，描述变更与安全注意事项。
+
+我已根据你的选择（直接在 main 上应用方案 A）更新并提交了 README.md。
