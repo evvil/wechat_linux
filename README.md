@@ -1,6 +1,6 @@
 # WeChat Linux（Docker 容器化）
 
-一个将微信 Linux 客户端运行在 Docker 容器内的解决方案，支持通过 VNC/noVNC 或者本地端口访问界面。适合用于自动化机器人、消息备份、远程访问等场景。
+一个将微信 Linux 客户端运行在 Docker 容器内的解决方案，支持通过 VNC/noVNC 或者本地端口访问界面。适合用于自动化机器人、消息备份、远程访问等场[...]
 
 快照：基于 Ubuntu + Fluxbox 的轻量桌面环境，使用 Xvfb 虚拟显示与 x11vnc 提供远程访问。
 
@@ -56,7 +56,7 @@ docker run -d --name wechat \
 ## noVNC（已从仓库移除）
 注意：仓库中已故意移除了 noVNC 的实际配置与文件。README 中保留的 noVNC 相关说明仅作为集成参考，并不表示仓库包含 noVNC 的实现。
 
-如果你需要将 noVNC 真正集成到项目中，我可以在新分支中添加一个可运行的 noVNC docker-compose 示例（包括如何通过 websockify/novnc 连接到 wechat 容器的 VNC 端口）并发起 PR。
+如果你需要将 noVNC 真正集成到项目中，我可以在新分支中添加一个可运行的 noVNC docker-compose 示例（包括如何通过 websockify/novnc 连接到 wechat 容器的 VN[...]
 
 ## 本地构建
 ```bash
@@ -107,26 +107,24 @@ docker run -d --name wechat -p 5900:5900 \
 
 ## 与原作者的对比（补充说明）
 
-说明：下面是我对本仓库 README 的改动摘要以及对原始作者（upstream）工作记录的简要说明，方便读者了解历史与差异。
+说明：下面是对最近三个提交的摘要，帮助读者快速了解本仓库相对于上游（原作者/早期维护者）的主要变更。
 
-- 我所做的 README 改动（2026-07-18, 提交者：Evvil）
-  - 将 README 重构为更清晰的章节（特性、快速开始、环境变量、数据卷、noVNC、故障排查、备份、安全建议、贡献等）。
-  - 在文档中注明仓库已移除 noVNC 的实际配置/文件（这是故意的删除），并把 noVNC 相关说明保留为集成参考。
+- 提交 946a69db6c1ef4ce430162c6f0b85c5fdf27459e — "[ubuntu] upgrade to 26" (2026-07-18)
+  - 概要：将基础镜像从 ubuntu:22.04 升级到 ubuntu:26.04；合并并优化了环境变量和包安装步骤；移除或简化了 noVNC 的相关安装与启动；将微信安装与启动脚本的复制与执行整合到 Dockerfile 中；将暴露端口调整为 5900 并以 start 脚本作为容器入口。
+  - 影响：镜像基础系统更新为更高版本（可能带来更好的包支持与安全更新）；同时简化镜像构建流程和运行时脚本，减少了在容器内对残留文件和复杂启动顺序的处理。
 
-- 上游/原作者与历史提交要点（摘选）
-  - 初始化提交（init version）: b8fb433 — 作者显示为 王旭（wangxu），建立项目基础结构。
-  - RisingWater 的维护提交（多次）: 包括更新 README、添加许可证、调整 Docker 工作流等（例如 4c7b45e、dc1ac64、4b7bbc5 等）。RisingWater 看起来是早期主要维护者/贡献者之一。
-  - 我在此仓库的提交（Evvil）: 0c8b53e 等，用于扩展 README 内容并调整示例与说明。
+- 提交 4d5dadfa0f8b67157051df6c6f6c04a3ea230de5 — "[compose] add compose" (2026-07-18)
+  - 概要：为项目添加 docker-compose.yml 示例并在 Dockerfile 中声明持久化卷（VOLUME）；补充了一些运行时依赖（如 dbus 等库）；对 start.sh 做了小幅调整以简化日志重定向与启动行为；暴露并默认映射 VNC 端口。
+  - 影响：为用户提供更便捷的一键启动方式（docker-compose）；明确声明要挂载的数据卷位置，便于数据持久化与备份；补强了运行时的依赖声明，降低容器运行时缺少库导致的问题。
 
-- 关于 noVNC：
-  - README 之前提及 noVNC，但仓库中并未包含 noVNC 的实际文件或配置（例如 noVNC 子模块、websockify、相关 Dockerfile 或 docker-compose 服务定义）。因此当前文档明确标注 noVNC 已被移除；若需要，我可以在新分支中添加实际集成示例。
+- 提交 2a5f2384b50c26bad48af6f288351da8d0da6b61 — "[compose] add compose" (2026-07-18)
+  - 概要：添加 .gitignore（忽略 data/）；调整 docker-compose.yml 中的默认挂载路径为 ./data/ 下的目录（更清晰地将运行数据集中到 data/）；对 start.sh 中的守护循环（自动重启逻辑）进行了注释/停用，改为更简单的前台运行模式；微调 compose 配置（注释掉 user 设置等）。
+  - 影响：将默认本地数据目录集中到仓库下的 data/ 目录，便于示例与本地测试；减少容器内的后台守护行为，便于调试与容器化系统对进程的管理（容器通常期望主进程在前台运行以便 Docker 管理）。
 
-- 建议
-  - 若想把 noVNC 当作可直接运行的功能，建议添加一个 docker-compose 服务示例：
-    - 使用 consol/novnc 或 novnc/noVNC 的镜像（或官方镜像），把 VNC_HOST/VNC_PORT 指向 wechat 容器的 5900 端口；并添加必要的安全配置（认证、HTTPS）示例。
-  - 如需我代为实现，我会：
-    1. 新建分支（例如 feat/novnc-compose），添加 docker-compose.yml 的 noVNC 服务示例和运行说明；
-    2. 运行简单测试（本地或通过说明步骤）；
-    3. 提交并打开 PR，描述变更与安全注意事项。
+总体评价与建议：
+- 这三次提交以实用性和可维护性为主线：升级基础镜像、简化启动脚本、补充 compose 支持并规范数据目录。若你依赖 noVNC 的浏览器访问功能，需要注意当前分支已移除或未启用 noVNC 的完整实现（可以在单独分支中再行集成）。
+- 建议在升级基础镜像后进行一次完整的 CI 构建与运行测试，验证在 Ubuntu 26.04 下所有依赖（尤其是微信二进制所需的库）都能正常工作。若需要，我可以为你：
+  1) 在新分支添加完整的 noVNC compose 示例并做基本测试；
+  2) 添加一个基于 GitHub Actions 的简单构建+lint 流程以自动化验证镜像能否构建并运行基本启动脚本。
 
-我已根据你的选择（直接在 main 上应用方案 A）更新并提交了 README.md。
+我已将上述摘要替换到 README 的“与原作者的对比（补充说明）”部分。如需我把这些变更单独放到一个 commit 或分支（而非直接修改 main README），我可以创建一个分支并提交变更.
