@@ -10,9 +10,9 @@ services:
       - /dev/dri
     volumes:
       - /dev/shm:/dev/shm
-      - ./data/.xwechat:/home/wechat/.xwechat
-      - ./data/xwechat_files:/home/wechat/xwechat_files
-      - ./data/downloads:/home/wechat/downloads
+      - ./data/.xwechat:/home/ubuntu/.xwechat
+      - ./data/xwechat_files:/home/ubuntu/xwechat_files
+      - ./data/downloads:/home/ubuntu/downloads
     environment:
       - DISPLAY=:1
       - RESOLUTION=1024x768x24

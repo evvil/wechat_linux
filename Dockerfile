@@ -41,7 +41,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
     # 创建用户（无需设置密码，减少步骤）
-    useradd -m -s /bin/bash wechat && \
     # 清理无用数据
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -50,12 +49,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY scripts/install-wechat.sh scripts/start.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-wechat.sh /usr/local/bin/start.sh && \
     /usr/local/bin/install-wechat.sh && \
+    apt-get install -f -y && \
     rm /usr/local/bin/install-wechat.sh
 
-WORKDIR /home/wechat
+WORKDIR /home/ubuntu
 
-# 声明数据卷（方便用户挂载持久化数据）
-VOLUME ["/home/wechat/.xwechat", "/home/wechat/xwechat_files", "/home/wechat/downloads"]
+# 声明数据卷
+VOLUME ["/home/ubuntu/.xwechat", "/home/ubuntu/xwechat_files", "/home/ubuntu/downloads"]
 
 EXPOSE 5900
 CMD ["/usr/local/bin/start.sh"]
