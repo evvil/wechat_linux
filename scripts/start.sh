@@ -6,12 +6,13 @@ chown -R ubuntu:ubuntu /home/ubuntu /var/log/ubuntu
 
 echo "正在启动系统服务..."
 
-# 1. 启动 DBus
-dbus-uuidgen --ensure
-dbus-daemon --system --fork --print-address
-DBUS_PID=$(pgrep -f dbus-daemon)
-sleep 2
-echo "- DBus 状态: $([ -n "$DBUS_PID" ] && ps -p $DBUS_PID > /dev/null && echo '运行中' || echo '启动失败')"
+# weixin自己会启动dbus，所以这里不需要再启动dbus了
+# # 1. 启动 DBus
+# dbus-uuidgen --ensure
+# dbus-daemon --system --fork --print-address
+# DBUS_PID=$(pgrep -f dbus-daemon)
+# sleep 2
+# echo "- DBus 状态: $([ -n "$DBUS_PID" ] && ps -p $DBUS_PID > /dev/null && echo '运行中' || echo '启动失败')"
 
 # 2. 启动虚拟屏幕 (Xvfb)
 Xvfb $DISPLAY -screen 0 $RESOLUTION -ac +extension GLX +render -noreset 2>&1 &
