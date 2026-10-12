@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export DISPLAY=:0
+export GDK_BACKEND=x11
+export QT_QPA_PLATFORM=xcb
+
 # 确保必要的目录存在并具有正确权限
 mkdir -p /var/run/dbus /var/lib/dbus /var/log/ubuntu /home/ubuntu/.xwechat /home/ubuntu/xwechat_files /home/ubuntu/downloads
 chown -R ubuntu:ubuntu /home/ubuntu /var/log/ubuntu
@@ -27,7 +31,7 @@ sleep 2
 echo "- Fluxbox 状态: $(ps -p $FLUXBOX_PID > /dev/null && echo '运行中' || echo '启动失败')"
 
 # 4. 启动 VNC 服务
-x11vnc -display $DISPLAY -forever -shared -passwd wechat -listen 0.0.0.0 -noscr -noxkb -wait 50 -defer 50 -noxdamage 2>&1 &
+x11vnc -display $DISPLAY -forever -shared -passwd wechat -listen 0.0.0.0 -rfbport 5909 -noscr -noxkb -wait 50 -defer 50 -noxdamage 2>&1 &
 X11VNC_PID=$!
 sleep 2
 echo "- x11vnc 状态: $(ps -p $X11VNC_PID > /dev/null && echo '运行中' || echo '启动失败')"
@@ -40,7 +44,7 @@ echo "=========================================="
 start_wechat() {
     echo "正在以 ubuntu 用户身份启动微信..."
     # 传递 DISPLAY 环境变量，并重定向输出到控制台
-    su - ubuntu -c "export DISPLAY=$DISPLAY; wechat 2>&1" &
+    su - ubuntu -c "export DISPLAY=$DISPLAY; export GDK_BACKEND=x11; export QT_QPA_PLATFORM=xcb; wechat 2>&1" &
     WECHAT_PID=$!
     sleep 5
     if ps -p $WECHAT_PID > /dev/null; then

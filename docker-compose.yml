@@ -5,14 +5,15 @@ services:
     container_name: wechat
     # privileged: true
     ports:
-      - "5900:5900"
+      - "5909:5909"
     devices:
       - /dev/dri
+    network_mode: host
     volumes:
       - /dev/shm:/dev/shm
-      - ./data/.xwechat:/home/ubuntu/.xwechat
-      - ./data/xwechat_files:/home/ubuntu/xwechat_files
-      - ./data/downloads:/home/ubuntu/downloads
+      - /home/n100/.xwechat:/home/ubuntu/.xwechat
+      - /home/n100/Documents/xwechat_files:/home/ubuntu/xwechat_files
+      - /home/n100/Downloads:/home/ubuntu/downloads
     environment:
       - DISPLAY=:1
       - RESOLUTION=1024x768x24
