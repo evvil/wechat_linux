@@ -6,8 +6,6 @@ services:
     # privileged: true
     ports:
       - "5909:5909"
-    devices:
-      - /dev/dri
     network_mode: host
     volumes:
       - /dev/shm:/dev/shm
@@ -15,7 +13,7 @@ services:
       - /home/n100/Documents/xwechat_files:/home/ubuntu/xwechat_files
       - /home/n100/Downloads:/home/ubuntu/downloads
     environment:
-      - DISPLAY=:1
+      - DISPLAY=:0
       - RESOLUTION=1024x768x24
       - LANG=zh_CN.UTF-8
       - LANGUAGE=zh_CN:zh
